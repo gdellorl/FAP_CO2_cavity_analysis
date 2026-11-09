@@ -12,7 +12,7 @@ The analysis identifies the transient cavities visited by CO2 inside the protein
 |---|---|
 | `cavity_precompute.py` | **Step 1**: reads the trajectories; computes, frame by frame, the residues in contact with CO2 and the CO2-protein minimum distance; detects the first exit of CO2 and the residues contacted just before it. |
 | `cavity_analysis.py` | **Step 2**: cavity detection, clustering, populations, residence times, timeline figure and legend, and clustering of exit sites into exit regions. |
-| `input.txt` | Input file used for the published analysis. |
+| `input.txt` | Input file used for the analysis. |
 
 ## Requirements
 
