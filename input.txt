@@ -1,0 +1,96 @@
+# =====================================================================
+# Input file for cavity_precompute.py and cavity_analysis.py
+#
+#   python3 cavity_precompute.py input_full.txt
+#   python3 cavity_analysis.py   input_full.txt
+#
+# All parameters are listed with the default values.
+# See README.txt for details.
+#
+# Syntax: 'key = value'; lines starting with '#', or text after ' # ', are
+# comments. Relative paths in [trajectories] are interpreted relative to the
+# location of this file; output_dir relative to the working directory.
+# =====================================================================
+
+# ---------------------------------------------------------------------
+# Files
+# ---------------------------------------------------------------------
+cache_file = residues_cache.pkl   # cache written by cavity_precompute.py
+output_dir = .                    # directory for all output files
+
+# ---------------------------------------------------------------------
+# Residue contacts (cavity_precompute.py)
+# ---------------------------------------------------------------------
+# A residue is in contact with CO2 if any atom of target_selection belonging
+# to it lies within contact_cutoff_nm of any atom of ligand_selection.
+contact_cutoff_nm = 0.4
+target_selection  = (protein or resname FAD or resname C15) and not (name H* or type H)
+ligand_selection  = resname CO2
+
+# ---------------------------------------------------------------------
+# First exit of CO2 from the protein (cavity_precompute.py)
+# ---------------------------------------------------------------------
+# First exit = first frame in which the minimum distance between ligand_selection
+# and exit_selection exceeds exit_threshold_nm. The exit site is the set of
+# residues of exit_selection within exit_contact_cutoff_nm of CO2 in the
+# exit_window_ps preceding the exit.
+exit_selection         = protein
+exit_threshold_nm      = 0.4
+exit_contact_cutoff_nm = 0.32
+exit_window_ps         = 100
+
+# ---------------------------------------------------------------------
+# Cavity detection (cavity_analysis.py)
+# Time parameters are in ps and must be multiples of dt_ps.
+# ---------------------------------------------------------------------
+dt_ps                   = 10      # time between saved frames (also used by cavity_precompute.py)
+reference_window_ps     = 50      # window for the majority-vote reference residue set
+consensus_fraction      = 0.5     # residue kept if present in >= this fraction of frames
+jaccard_threshold       = 0.4     # cavity occupied while Jaccard index >= this value
+recrossing_tolerance_ps = 20      # cavity left only after J < threshold for longer than this
+min_visit_ps            = 100     # shorter visits are discarded
+min_residues_cavity     = 3       # visits with fewer consensus residues are discarded
+
+# ---------------------------------------------------------------------
+# Clustering of visits into cavities (cavity_analysis.py)
+# similarity = w * Jaccard + (1 - w) * overlap; average linkage
+# ---------------------------------------------------------------------
+similarity_threshold = 0.36       # visits merged if similarity >= this value
+jaccard_weight       = 0.5        # w
+
+# ---------------------------------------------------------------------
+# Clustering of exit sites into exit regions (cavity_analysis.py)
+# ---------------------------------------------------------------------
+exit_similarity_threshold = 0.36
+exit_jaccard_weight       = 0.5
+
+# ---------------------------------------------------------------------
+# Timeline figure and legend (cavity_analysis.py)
+# Colors: r,g,b in [0,1], hex codes (#1f77b4) or matplotlib names (tab:blue)
+# ---------------------------------------------------------------------
+n_explicit_cavities = 6           # cavities with an individual color; the others are grey
+cavity_colors       = 0.12,0.47,0.71  0.68,0.78,0.91  1.00,0.50,0.05  1.00,0.73,0.47  0.17,0.63,0.17  0.60,0.87,0.54  0.84,0.15,0.16
+other_color         = 0.75,0.75,0.75  # "Other cavities"
+gap_color           = #F5E6A3         # "Gap": contact with the protein but no cavity assigned
+outside_color       = white           # "Outside protein"
+outside_edge_color  = black           # edge of the "Outside protein" box in the legend
+panel_order         = name            # 'name' (natural sort of names) or 'input' (order below)
+figsize             = 8 16.2          # width height of the timeline figure (inches)
+vspace              = 0.03            # vertical space between panels
+font_label          = 20
+font_tick           = 16
+legend_title        = Cavity legend   # 'none' for no title
+font_legend         = 18
+font_legend_title   = 20
+dpi                 = 300
+timeline_file       = cavity_timeline_panels.png
+legend_file         = cavity_timeline_legend.png
+
+# ---------------------------------------------------------------------
+# Trajectories: name  topology  trajectory
+# Processed in the order listed.
+# ---------------------------------------------------------------------
+[trajectories]
+MD1   ../topology_file.pdb  ../MD_test1.xtc
+MD2   ../topology_file.pdb  ../MD_test2.xtc
+MD3   ../topology_file.pdb  ../MD_test3.xtc
