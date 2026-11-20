@@ -1,16 +1,16 @@
-# CO2 Cavity and Exit-Site Analysis
+# CO<sub>2</sub> Cavity and Exit-Site Analysis
 
-Python scripts used to analyze CO2 migration and release in the molecular dynamics (MD) simulations of fatty acid photodecarboxylase described in
+Python scripts used to analyze CO<sub>2</sub> migration and release in the molecular dynamics (MD) simulations of fatty acid photodecarboxylase described in
 
-> Gianluca Dell'Orletta and Isabella Daidone, *A Distributed Diffusion Landscape Governs CO2 Coproduct Release from Fatty Acid Photodecarboxylase*, ChemRxiv 2026. [https://doi.org/10.26434/chemrxiv.15008533/v1](https://doi.org/10.26434/chemrxiv.15008533/v1)
+> Gianluca Dell'Orletta and Isabella Daidone, *A Distributed Diffusion Landscape Governs CO<sub>2</sub> Coproduct Release from Fatty Acid Photodecarboxylase*, ChemRxiv 2026. [https://doi.org/10.26434/chemrxiv.15008533/v1](https://doi.org/10.26434/chemrxiv.15008533/v1)
 
-The analysis identifies the transient cavities visited by CO2 inside the protein from residue-contact patterns, computes their populations and residence times, detects the first exit of CO2 from the protein, and groups the exit sites of the different trajectories into exit regions.
+The analysis identifies the transient cavities visited by CO<sub>2</sub> inside the protein from residue-contact patterns, computes their populations and residence times, detects the first exit of CO<sub>2</sub> from the protein, and groups the exit sites of the different trajectories into exit regions.
 
 ## Files
 
 | File | Description |
 |---|---|
-| `cavity_precompute.py` | **Step 1**: reads the trajectories; computes, frame by frame, the residues in contact with CO2 and the CO2-protein minimum distance; detects the first exit of CO2 and the residues contacted just before it. |
+| `cavity_precompute.py` | **Step 1**: reads the trajectories; computes, frame by frame, the residues in contact with CO<sub>2</sub> and the CO<sub>2</sub>-protein minimum distance; detects the first exit of CO<sub>2</sub> and the residues contacted just before it. |
 | `cavity_analysis.py` | **Step 2**: cavity detection, clustering, populations, residence times, timeline figure and legend, and clustering of exit sites into exit regions. |
 | `input.txt` | Input file used for the analysis. |
 
@@ -67,17 +67,17 @@ Parameters not given in the input file take the default values below, which are 
 
 | Parameter | Default | Description |
 |---|---|---|
-| `contact_cutoff_nm` | `0.4` | residue in contact with CO2 if any of its heavy atoms lies within this distance of any CO2 atom |
+| `contact_cutoff_nm` | `0.4` | residue in contact with CO<sub>2</sub> if any of its heavy atoms lies within this distance of any CO<sub>2</sub> atom |
 | `target_selection` | `(protein or resname FAD or resname C15) and not (name H* or type H)` | |
 | `ligand_selection` | `resname CO2` | |
 
-**First exit of CO2** (`cavity_precompute.py`)
+**First exit of CO<sub>2</sub>** (`cavity_precompute.py`)
 
 | Parameter | Default | Description |
 |---|---|---|
-| `exit_selection` | `protein` | atoms used for the CO2-protein minimum distance |
+| `exit_selection` | `protein` | atoms used for the CO<sub>2</sub>-protein minimum distance |
 | `exit_threshold_nm` | `0.36` | first exit = first frame in which the minimum distance exceeds this value |
-| `exit_contact_cutoff_nm` | `0.32` | cutoff used to list the residues contacted by CO2 before the exit (exit site) |
+| `exit_contact_cutoff_nm` | `0.32` | cutoff used to list the residues contacted by CO<sub>2</sub> before the exit (exit site) |
 | `exit_window_ps` | `100` | length of the window preceding the exit |
 
 **Cavity detection** (`cavity_analysis.py`; time parameters must be multiples of `dt_ps`)
@@ -130,7 +130,7 @@ Parameters not given in the input file take the default values below, which are 
 
 ## Method
 
-**Residue contacts.** For each frame, the set of residues (protein, FAD and C15 alkane) with at least one heavy atom within `contact_cutoff_nm` of a CO2 atom is computed.
+**Residue contacts.** For each frame, the set of residues (protein, FAD and C15 alkane) with at least one heavy atom within `contact_cutoff_nm` of a CO<sub>2</sub> atom is computed.
 
 **Cavity detection.** Starting from a frame, a reference residue set is built from the frames of a window of `reference_window_ps` (majority-vote consensus). The reference set is then followed forward in time through the Jaccard index J(A,B) = |A ∩ B| / |A ∪ B| between the reference set and the contact set of each frame. The cavity is considered occupied while J >= `jaccard_threshold`, and left only when J stays below the threshold for longer than `recrossing_tolerance_ps`. Visits shorter than `min_visit_ps`, or with fewer than `min_residues_cavity` consensus residues, are discarded. The residue set of a visit is the consensus over all its frames. Detection then restarts from the end of the visit.
 
@@ -138,7 +138,7 @@ Parameters not given in the input file take the default values below, which are 
 
 **Residence times.** The residence time of a visit is the time between its first frame and its exit frame. For each cavity, the mean, standard error of the mean (SEM), median and standard deviation over all its visits are reported.
 
-**First exit and exit regions.** The first exit of CO2 is the first frame in which the CO2-protein minimum distance exceeds `exit_threshold_nm`. The exit site of a trajectory is the set of residues within `exit_contact_cutoff_nm` of CO2 in the `exit_window_ps` preceding the exit. Exit sites are clustered into exit regions with the same similarity measure and average linkage used for cavities.
+**First exit and exit regions.** The first exit of CO<sub>2</sub> is the first frame in which the CO<sub>2</sub>-protein minimum distance exceeds `exit_threshold_nm`. The exit site of a trajectory is the set of residues within `exit_contact_cutoff_nm` of CO<sub>2</sub> in the `exit_window_ps` preceding the exit. Exit sites are clustered into exit regions with the same similarity measure and average linkage used for cavities.
 
 ## Output
 
@@ -148,8 +148,8 @@ Parameters not given in the input file take the default values below, which are 
 |---|---|
 | `residues_cache.pkl` | cache read by `cavity_analysis.py` |
 | `first_exit_times.dat` | first-exit frame and time of each trajectory |
-| `mindist/mindist_<name>.dat` | CO2-protein minimum distance vs time (ps, nm) |
-| `exit_residues/exit_residues_<name>.dat` | residues in contact with CO2 in each frame of the window preceding the exit |
+| `mindist/mindist_<name>.dat` | CO<sub>2</sub>-protein minimum distance vs time (ps, nm) |
+| `exit_residues/exit_residues_<name>.dat` | residues in contact with CO<sub>2</sub> in each frame of the window preceding the exit |
 
 **`cavity_analysis.py`** (in `output_dir`):
 
@@ -170,7 +170,7 @@ Frame indices are 0-based and refer to the frames of each trajectory.
 
 If you use these scripts, please cite:
 
-> Gianluca Dell'Orletta and Isabella Daidone, *A Distributed Diffusion Landscape Governs CO2 Coproduct Release from Fatty Acid Photodecarboxylase*, ChemRxiv 2026. [https://doi.org/10.26434/chemrxiv.15008533/v1](https://doi.org/10.26434/chemrxiv.15008533/v1)
+> Gianluca Dell'Orletta and Isabella Daidone, *A Distributed Diffusion Landscape Governs CO<sub>2</sub> Coproduct Release from Fatty Acid Photodecarboxylase*, ChemRxiv 2026. [https://doi.org/10.26434/chemrxiv.15008533/v1](https://doi.org/10.26434/chemrxiv.15008533/v1)
 
 ## License
 
